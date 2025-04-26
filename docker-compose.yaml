@@ -23,3 +23,22 @@ services:
     depends_on:
       - database
 
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+  
+  environment:
+    CELERY_BROKER_URL: redis://redis:6379
+    CELERY_RESULT_BACKEND: redis://redis:6379
+  
+  volumes:
+    - ./todo:/app/todo
+    - ./credentials:/root/.aws/credentials
+  environment:
+    CELERY_BROKER_URL: sqs://
+  environment:
+    CELERY_RESULT_BACKEND: db+postgresql://administrator:
+      verySecretPassword@database:5432/todo
+
